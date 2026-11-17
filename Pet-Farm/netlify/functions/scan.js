@@ -19,8 +19,8 @@ exports.handler = async function(event) {
             }]
         });
 
-       const options = {
-            hostname: '://googleapis.com',
+      const options = {
+            hostname: 'generativelanguage' + '.googleapis.com',
             path: '/v1beta/models/gemini-2.5-flash:generateContent?key=' + encodeURIComponent(apiKey),
             method: 'POST',
             headers: {
@@ -28,7 +28,6 @@ exports.handler = async function(event) {
                 'Content-Length': Buffer.byteLength(payload)
             }
         };
-
 
         const resultText = await new Promise((resolve, reject) => {
             const req = https.request(options, (res) => {
