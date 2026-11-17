@@ -1,30 +1,55 @@
+const https = require('https');
+
 exports.handler = async function(event) {
     if (event.httpMethod !== 'POST') {
         return { statusCode: 405, body: 'Method Not Allowed' };
     }
+
     try {
         const body = JSON.parse(event.body);
-        const url = 'https://googleapis.com' + encodeURIComponent(body.apiKey);
-        const payload = {
+        const apiKey = (body.apiKey || '').trim();
+        const base64Data = body.image;
+
+        const payload = JSON.stringify({
             contents: [{
                 parts: [
                     { text: 'วิเคราะห์อาหารในรูปนี้ ตอบเป็น JSON เท่านั้นในรูปแบบ {"name": "ชื่ออาหารภาษาไทยสั้นๆ", "cal": ตัวเลขแคลอรี่โดยประมาณ} ห้ามมีข้อความอื่นหรือ markdown' },
-                    { inline_data: { mime_type: 'image/jpeg', data: body.image } }
+                    { inline_data: { mime_type: 'image/jpeg', data: base64Data } }
                 ]
             }]
-        };
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
         });
-        const data = await response.json();
+
+        const options = {
+            hostname: '://googleapis.com',
+            path: '/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(apiKey),
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(payload)
+            }
+        };
+
+        const resultText = await new Promise((resolve, reject) => {
+            const req = https.request(options, (res) => {
+                let data = '';
+                res.on('data', chunk => data += chunk);
+                res.on('end', () => resolve(data));
+            });
+            req.on('error', reject);
+            req.write(payload);
+            req.end();
+        });
+
         return {
             statusCode: 200,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: resultText
         };
     } catch (err) {
-        return { statusCode: 500, body: JSON.stringify({ error: { message: err.message } }) };
+        return {
+            statusCode: 500,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ error: { message: err.message } })
+        };
     }
 };
