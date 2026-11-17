@@ -7,8 +7,9 @@ exports.handler = async function(event) {
 
     try {
         const body = JSON.parse(event.body);
-        const apiKey = (body.apiKey || '').trim();
+        const myKey = (body.apiKey || '').trim();
         const base64Data = body.image;
+
 
         const payload = JSON.stringify({
             contents: [{
@@ -21,7 +22,8 @@ exports.handler = async function(event) {
 
       const options = {
             hostname: 'generativelanguage' + '.googleapis.com',
-            path: '/v1beta/models/gemini-2.5-flash:generateContent?key=' + encodeURIComponent(apiKey),
+            path: '/v1beta/models/gemini-2.5-flash:generateContent?key=' + encodeURIComponent(myKey),
+
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
