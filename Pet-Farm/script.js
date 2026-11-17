@@ -116,23 +116,6 @@
         document.getElementById('search-dropdown').style.display = 'none';
     }
 
-    var workoutDB = [
-        { name: "เดินเล่นทั่วไป", met: 3.0 },
-        { name: "เดินเร็ว / เดินชัน", met: 4.5 },
-        { name: "วิ่งจ๊อกกิ้งเบาๆ", met: 7.0 },
-        { name: "วิ่งเร็ว / วิ่งมาราธอน", met: 9.8 },
-        { name: "ปั่นจักรยานทั่วไป", met: 5.5 },
-        { name: "ว่ายน้ำฟรีสไตล์", met: 7.0 },
-        { name: "เวทเทรนนิ่ง / ยกน้ำหนัก", met: 5.0 },
-        { name: "บอดี้เวท / แพลงก์ / สควอท", met: 4.8 },
-        { name: "โยคะ / ยืดเหยียด", met: 2.8 },
-        { name: "เต้นแอโรบิก / ซุมบ้า", met: 6.5 },
-        { name: "กระโดดเชือก", met: 10.0 },
-        { name: "ตีแบดมินตัน", met: 5.5 },
-        { name: "ต่อยมวย / มวยไทย", met: 8.5 },
-        { name: "ทำงานบ้าน / กวาดถูบ้าน", met: 3.2 }
-    ];
-
     var selectedMet = 0;
 
     function handleWorkoutSearch(query) {
