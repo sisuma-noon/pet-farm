@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Farm - แอปนับแคลอรี่</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2a9d8f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+</head>
+<body>
+
+<div class="app-container">
+    <button type="button" class="top-refresh-btn" title="อัปเดตเวอร์ชันล่าสุด" onclick="window.location.href = window.location.pathname + '?t=' + new Date().getTime();">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter: none;">
+            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+        </svg>
+    </button>
+
+    <h1>Pet-Farm</h1>
+    <div class="subtitle">ป้อนอาหารและพาน้องออกกำลังกายกันเถอะ!</div>
+    <div class="character-stage" id="stage-bg">
+        <div class="char-picker">
+            <button type="button" class="char-btn active" id="btn-elephant" onclick="changeChar('elephant')">🐘 ช้าง</button>
+            <button type="button" class="char-btn" id="btn-pig" onclick="changeChar('pig')">🐷 หมู</button>
+            <button type="button" class="char-btn" id="btn-hippo" onclick="changeChar('hippo')">🦛 ฮิปโป</button>
+            <button type="button" class="char-btn" id="btn-giraffe" onclick="changeChar('giraffe')">🦒 ยีราฟ</button>
+            <button type="button" class="char-btn" id="btn-dino" onclick="changeChar('dino')">🦖 ไดโน</button>
+        </div>
+
+        <svg viewBox="0 0 210 200">
+            <defs>
+                <radialGradient id="body3D" cx="35%" cy="30%" r="70%">
+                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4" />
+                    <stop offset="100%" stop-color="#000000" stop-opacity="0.18" />
+                </radialGradient>
+                <radialGradient id="belly3D" cx="40%" cy="30%" r="70%">
+                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4" />
+                    <stop offset="100%" stop-color="#000000" stop-opacity="0.08" />
+                </radialGradient>
+            </defs>
+
+            <ellipse cx="105" cy="185" rx="52" ry="8" fill="rgba(43, 24, 16, 0.14)" />
+
+            <g id="pet-rig">
+                <path id="dino-tail" d="M 142 148 Q 168 142 172 132" stroke="#2b1810" stroke-width="5" fill="none" stroke-linecap="round" />
+
+                <g id="head-dino" style="display: none;">
+                    <path d="M 140 140 Q 186 136 192 112 Q 178 162 138 162 Z" fill="#52c48e" stroke="#2b1810" stroke-width="5" stroke-linejoin="round" />
+                    <polygon points="94,35 105,16 116,35" fill="#f4a261" stroke="#2b1810" stroke-width="4.5" stroke-linejoin="round" />
+                    <polygon points="135,48 152,38 148,60" fill="#f4a261" stroke="#2b1810" stroke-width="4.5" stroke-linejoin="round" />
+                    <polygon points="148,96 168,94 156,112" fill="#f4a261" stroke="#2b1810" stroke-width="4.5" stroke-linejoin="round" />
+                </g>
+
+                <ellipse id="dino-body" cx="105" cy="132" rx="44" ry="42" fill="#b8c4cc" stroke="#2b1810" stroke-width="5.5" />
+                <ellipse id="dino-belly" cx="105" cy="138" rx="26" ry="26" fill="#dce4e8" />
+
+                <g id="spots-giraffe" style="display: none;" fill="#c87d28">
+                    <circle cx="75" cy="128" r="5" />
+                    <circle cx="135" cy="130" r="4.5" />
+                    <circle cx="78" cy="148" r="4" />
+                    <circle cx="132" cy="146" r="5" />
+                </g>
+
+                <ellipse id="dino-body-shine" cx="105" cy="132" rx="44" ry="42" fill="url(#body3D)" style="pointer-events:none; transition: all 0.5s;" />
+                <ellipse id="dino-belly-shine" cx="105" cy="138" rx="26" ry="26" fill="url(#belly3D)" style="pointer-events:none; transition: all 0.5s;" />
+
+                <g id="leg-left">
+                    <rect class="body-part" x="78" y="160" width="20" height="24" rx="10" fill="#b8c4cc" stroke="#2b1810" stroke-width="5" />
+                    <path d="M 81 182 A 3 3 0 0 1 87 182 A 3 3 0 0 1 93 182" fill="#ffffff" stroke="#2b1810" stroke-width="2.5" />
+                </g>
+                <g id="leg-right">
+                    <rect class="body-part" x="112" y="160" width="20" height="24" rx="10" fill="#b8c4cc" stroke="#2b1810" stroke-width="5" />
+                    <path d="M 115 182 A 3 3 0 0 1 121 182 A 3 3 0 0 1 127 182" fill="#ffffff" stroke="#2b1810" stroke-width="2.5" />
+                </g>
+
+                <g id="left-arm">
+                    <ellipse class="body-part" cx="60" cy="128" rx="11" ry="18" fill="#b8c4cc" stroke="#2b1810" stroke-width="5" transform="rotate(28 60 128)" />
+                </g>
+                <g id="right-arm">
+                    <ellipse class="body-part" cx="150" cy="128" rx="11" ry="18" fill="#b8c4cc" stroke="#2b1810" stroke-width="5" transform="rotate(-28 150 128)" />
+                </g>
+                <g id="head-elephant">
+                    <path d="M 62 56 C 24 44, 16 108, 56 116 C 68 118, 74 104, 70 90" fill="#b8c4cc" stroke="#2b1810" stroke-width="5.5" stroke-linecap="round" />
+                    <path d="M 58 66 C 34 58, 28 100, 56 106 C 64 108, 66 96, 64 86" fill="#ff9ebb" stroke="#2b1810" stroke-width="3.5" />
+                    <path d="M 148 56 C 186 44, 194 108, 154 116 C 142 118, 136 104, 140 90" fill="#b8c4cc" stroke="#2b1810" stroke-width="5.5" stroke-linecap="round" />
+                    <path d="M 152 66 C 176 58, 182 100, 154 106 C 146 108, 144 96, 146 86" fill="#ff9ebb" stroke="#2b1810" stroke-width="3.5" />
+                </g>
+
+                <g id="head-pig" style="display: none;">
+                    <path d="M 64 56 Q 48 26 78 38" fill="#ffb3c6" stroke="#2b1810" stroke-width="5.5" stroke-linejoin="round" />
+                    <path d="M 146 56 Q 162 26 132 38" fill="#ffb3c6" stroke="#2b1810" stroke-width="5.5" stroke-linejoin="round" />
+                </g>
+
+                <g id="head-hippo" style="display: none;">
+                    <circle cx="68" cy="44" r="12" fill="#a594b5" stroke="#2b1810" stroke-width="5" />
+                    <circle cx="68" cy="44" r="5" fill="#ff9ebb" />
+                    <circle cx="142" cy="44" r="12" fill="#a594b5" stroke="#2b1810" stroke-width="5" />
+                    <circle cx="142" cy="44" r="5" fill="#ff9ebb" />
+                </g>
+
+                <g id="head-giraffe" style="display: none;">
+                    <line x1="88" y1="40" x2="82" y2="20" stroke="#2b1810" stroke-width="6" stroke-linecap="round" />
+                    <circle cx="82" cy="18" r="6" fill="#8d4004" stroke="#2b1810" stroke-width="4" />
+                    <line x1="122" y1="40" x2="128" y2="20" stroke="#2b1810" stroke-width="6" stroke-linecap="round" />
+                    <circle cx="128" cy="18" r="6" fill="#8d4004" stroke="#2b1810" stroke-width="4" />
+                    <ellipse cx="56" cy="54" rx="14" ry="8" fill="#ffd166" stroke="#2b1810" stroke-width="5" transform="rotate(-20 56 54)" />
+                    <ellipse cx="154" cy="54" rx="14" ry="8" fill="#ffd166" stroke="#2b1810" stroke-width="5" transform="rotate(20 154 54)" />
+                </g>
+
+                <path id="head-tuft" d="M 98 36 Q 106 18 116 24 Q 110 32 118 38" fill="#b8c4cc" stroke="#2b1810" stroke-width="5" stroke-linejoin="round" />
+                <ellipse id="head-base" cx="105" cy="78" rx="52" ry="44" fill="#b8c4cc" stroke="#2b1810" stroke-width="5.5" />
+
+                <circle cx="80" cy="48" r="3" fill="#ffffff" />
+                <circle cx="88" cy="44" r="2" fill="#ffffff" />
+                <path d="M 73 63 Q 78 60 83 63" stroke="#2b1810" stroke-width="3" fill="none" stroke-linecap="round" />
+                <path d="M 127 63 Q 132 60 137 63" stroke="#2b1810" stroke-width="3" fill="none" stroke-linecap="round" />
+
+                <g id="eyes-normal">
+                    <circle cx="77" cy="76" r="7.5" fill="#2b1810" />
+                    <circle cx="133" cy="76" r="7.5" fill="#2b1810" />
+                    <circle cx="75" cy="73" r="2.8" fill="#ffffff" />
+                    <circle cx="131" cy="73" r="2.8" fill="#ffffff" />
+                </g>
+                <g id="eyes-hungry" style="display: none;">
+                    <path d="M 70 78 Q 77 71 84 78" stroke="#2b1810" stroke-width="3.5" fill="none" stroke-linecap="round" />
+                    <path d="M 126 78 Q 133 71 140 78" stroke="#2b1810" stroke-width="3.5" fill="none" stroke-linecap="round" />
+                </g>
+
+                <ellipse cx="66" cy="89" rx="8" ry="5" fill="#ff758f" />
+                <circle cx="63" cy="87" r="1.5" fill="#ffffff" />
+                <ellipse cx="144" cy="89" rx="8" ry="5" fill="#ff758f" />
+                <circle cx="141" cy="87" r="1.5" fill="#ffffff" />
+
+                <g id="face-elephant">
+                    <path d="M 96 82 C 94 104, 102 122, 115 118 C 121 116, 120 108, 114 109 C 109 110, 108 98, 112 82" fill="#b8c4cc" stroke="#2b1810" stroke-width="5" stroke-linecap="round" />
+                    <path d="M 100 88 Q 105 86 109 88" stroke="#2b1810" stroke-width="2.5" fill="none" stroke-linecap="round" />
+                    <path d="M 100 95 Q 105 93 109 95" stroke="#2b1810" stroke-width="2.5" fill="none" stroke-linecap="round" />
+                </g>
+
+                <g id="face-pig" style="display: none;">
+                    <ellipse cx="105" cy="86" rx="16" ry="11" fill="#ff8fab" stroke="#2b1810" stroke-width="4.5" />
+                    <ellipse cx="99" cy="86" rx="2.5" ry="4" fill="#2b1810" />
+                    <ellipse cx="111" cy="86" rx="2.5" ry="4" fill="#2b1810" />
+                </g>
+
+                <g id="face-hippo" style="display: none;">
+                    <ellipse cx="105" cy="92" rx="28" ry="16" fill="#d8cce3" stroke="#2b1810" stroke-width="5" />
+                    <circle cx="94" cy="86" r="3" fill="#2b1810" />
+                    <circle cx="116" cy="86" r="3" fill="#2b1810" />
+                    <path d="M 97 96 Q 105 102 113 96" stroke="#2b1810" stroke-width="3" fill="none" stroke-linecap="round" />
+                </g>
+
+                <g id="face-giraffe" style="display: none;">
+                    <ellipse cx="105" cy="91" rx="20" ry="13" fill="#ffe5b4" stroke="#2b1810" stroke-width="4.5" />
+                    <circle cx="98" cy="87" r="2.2" fill="#2b1810" />
+                    <circle cx="112" cy="87" r="2.2" fill="#2b1810" />
+                    <path d="M 99 95 Q 105 100 111 95" stroke="#2b1810" stroke-width="3" fill="none" stroke-linecap="round" />
+                </g>
+
+                <g id="face-dino" style="display: none;">
+                    <circle cx="99" cy="80" r="2.2" fill="#2b1810" />
+                    <circle cx="111" cy="80" r="2.2" fill="#2b1810" />
+                    <path d="M 94 87 Q 105 97 116 87" stroke="#2b1810" stroke-width="3.5" fill="none" stroke-linecap="round" />
+                </g>
+
+                <path id="sweat-drop" d="M 152 54 Q 158 64 152 70 Q 146 64 152 54" fill="#4cc9f0" stroke="#2b1810" stroke-width="2" opacity="0" />
+            </g>
+        </svg>
+        <br>
+        <div class="status-badge" id="status-text">กำลังหิวโซเลย... ป้อนอะไรหน่อย</div>
+    </div>
+
+
+    <div class="calorie-box">
+
+
+
+    <div class="calorie-box">
+        <div class="calorie-numbers">
+            <div><span class="current-cal" id="net-cal">0</span> <small>kcal สุทธิ</small></div>
+            <div class="target-cal">เป้าหมาย: <strong>2,000</strong> kcal</div>
+        </div>
+        <div class="sub-stats">
+            <span>🍽️ กินเข้า: <strong id="in-cal">0</strong> kcal</span>
+            <span>🔥 เบิร์นออก: <strong id="out-cal">0</strong> kcal</span>
+        </div>
+        <div class="progress-bg">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button type="button" class="tab-btn active-food" id="tab-food" onclick="switchTab('food')">🍽️ ป้อนอาหาร</button>
+        <button type="button" class="tab-btn" id="tab-workout" onclick="switchTab('workout')">🏃‍♂️ ออกกำลังกาย</button>
+    </div>
+
+    <div id="section-food">
+        <div class="scan-bar">
+            <input type="file" id="food-img-input" accept="image/*" style="display: none;" onchange="scanFoodImage(this)">
+            <button type="button" class="scan-btn" id="scan-btn-text" onclick="triggerFoodScan()">📷 ถ่ายรูป / อัปโหลดสแกนอาหาร</button>
+            <button type="button" class="key-btn" title="ตั้งค่า Gemini API Key" onclick="setGeminiKey()">🔑</button>
+        </div>
+
+        <div class="input-group">
+            <div class="search-wrapper">
+    	        <input type="text" id="food-name" placeholder="พิมพ์ค้นหาอาหาร" autocomplete="off" oninput="handleSearch(this.value)">
+    	        <div class="search-dropdown" id="search-dropdown"></div>
+	</div>
+
+            <input type="number" id="food-cal" class="cal-input" placeholder="แคลอรี่">
+        </div>
+        <button type="button" class="action-btn btn-food" onclick="addLog('food')">+ ป้อนอาหารให้น้อง</button>
+       </div>
+
+        <div id="section-workout" style="display: none;">
+        <div class="input-group">
+            <div class="search-wrapper">
+                <input type="text" id="workout-name" placeholder="ค้นหากิจกรรม (เช่น วิ่ง, โยคะ)" autocomplete="off" oninput="handleWorkoutSearch(this.value)">
+                <div class="search-dropdown" id="workout-dropdown"></div>
+            </div>
+            <input type="number" id="workout-mins" class="cal-input" placeholder="นาที" value="30" oninput="recalcWorkout()">
+            <input type="number" id="workout-cal" class="cal-input" placeholder="เบิร์น">
+        </div>
+        <button type="button" class="action-btn btn-workout" onclick="addLog('workout')">🔥 บันทึกการเบิร์นแคลอรี่</button>
+    </div>
+
+
+    <div class="log-list" id="log-list"></div>
+
+    <div class="chart-box">
+        <div class="chart-title">
+            <span>📊 สถิติแคลอรี่ 7 วันล่าสุด</span>
+            <span style="font-weight: 400; color: #888;">(สุทธิ/วัน)</span>
+        </div>
+        <div class="chart-bars" id="chart-bars"></div>
+    </div>
+
+    <button type="button" class="reset-btn" onclick="resetDay()">เริ่มวันใหม่ (รีเซ็ตข้อมูลทั้งหมด)</button>
+</div>
+
+    <script src="script.js?v=2"></script>
+</body>
+</html>
