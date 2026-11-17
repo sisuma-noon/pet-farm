@@ -449,14 +449,9 @@ function setGeminiKey() {
 }
 
 function triggerFoodScan() {
-    var apiKey = localStorage.getItem('geminiApiKey');
-    if (!apiKey) {
-        alert('กรุณากดปุ่ม 🔑 เพื่อใส่ Gemini API Key (ฟรี) ก่อนใช้งานสแกนรูปภาพครับ');
-        setGeminiKey();
-        return;
-    }
     document.getElementById('food-img-input').click();
 }
+
 
 function scanFoodImage(input) {
     var file = input.files.item(0);
@@ -464,12 +459,7 @@ function scanFoodImage(input) {
 
     var rawKey = localStorage.getItem('geminiApiKey') || '';
     var apiKey = rawKey.replace(/[^a-zA-Z0-9_-]/g, '');
-    
-    if (apiKey.length < 20) {
-        alert('รูปแบบ API Key ไม่ถูกต้อง กรุณากดปุ่ม 🔑 แล้ววางรหัสที่ขึ้นต้นด้วย AIzaSy... ใหม่อีกครั้งครับ');
-        input.value = '';
-        return;
-    }
+
 
     var btnText = document.getElementById('scan-btn-text');
     btnText.innerText = '⏳ กำลังวิเคราะห์รูปอาหาร...';
