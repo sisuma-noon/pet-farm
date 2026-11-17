@@ -19,15 +19,16 @@ exports.handler = async function(event) {
             }]
         });
 
-        const options = {
+       const options = {
             hostname: '://googleapis.com',
-            path: '/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(apiKey),
+            path: '/v1beta/models/gemini-2.5-flash:generateContent?key=' + encodeURIComponent(apiKey),
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(payload)
             }
         };
+
 
         const resultText = await new Promise((resolve, reject) => {
             const req = https.request(options, (res) => {
