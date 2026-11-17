@@ -21,7 +21,7 @@ exports.handler = async function(event) {
 
         const options = {
             hostname: 'generativelanguage' + '.googleapis.com',
-            path: '/v1beta/models/gemini-2.5-flash:generateContent?key=' + myKey,
+            path: '/v1beta/models/gemini-3.8-flash:generateContent?key=' + myKey,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
